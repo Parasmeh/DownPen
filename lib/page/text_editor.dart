@@ -97,7 +97,7 @@ class _TextWidgetState extends State<TextEditor> {
                   setState(() {
                     getSavedData(json);
                   });
-                  print("Document Saved Successfully\n");
+                  print("Document Saved\n");
                   Navigator.pop(context);
                 },
                 child: Icon(
