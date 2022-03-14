@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion 31
-    ndkVersion flutter.ndkVersion
+    // ndkVersion 28
     packagingOptions {
         exclude 'lib/**/libface_detector_v2_jni.so'
         exclude 'lib/**/libtensorflowlite_jni.so'

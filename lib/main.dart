@@ -84,28 +84,9 @@ class _HomePageState extends State<HomePage>
             ),
           ],
         ),
-        // appBar: AppBar(
-        //   title: Text(MyApp.title),
-        //   centerTitle: false,
-        //   actions: [
-        //     Row(
-        //       children: [
-        //         Text(
-        //           isGallery ? 'Gallery' : 'Camera',
-        //           style: TextStyle(fontWeight: FontWeight.bold),
-        //         ),
-        //         Switch(
-        //           value: isGallery,
-        //           onChanged: (value) => setState(() => isGallery = value),
-        //         ),
-        //       ],
-        //     ),
-        //   ],
-        // ),
         body: Column(
           children: [
             Container(
-              // color: Theme.of(context).primaryColor,
               child: TabBar(
                 controller: controller,
                 indicatorWeight: 1,

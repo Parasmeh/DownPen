@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class TextEditor extends StatefulWidget {
   static String id = '/text_editor';
 
@@ -21,8 +20,6 @@ class _TextWidgetState extends State<TextEditor> {
   var savedList = [];
   void getSavedData(String convertedTextJson) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String data = prefs.getString('saved_data') ?? '';
-    // List list = json.decode(data).toList();
     savedList.add(convertedTextJson);
     await prefs.setString('saved_data', json.encode(savedList));
     print(savedList);
@@ -36,7 +33,6 @@ class _TextWidgetState extends State<TextEditor> {
     } else {
       print("null returned");
     }
-
     initializeScreenWithScannedText();
     setState(() {});
   }
@@ -61,15 +57,11 @@ class _TextWidgetState extends State<TextEditor> {
     // TODO: implement initState
     super.initState();
     print(widget.text);
-    // initializeScreenWithScannedText();
     getSaved();
   }
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   widget.text = ModalRoute.of(context)!.settings.arguments as String;
-    // });
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -99,29 +91,6 @@ class _TextWidgetState extends State<TextEditor> {
               padding: const EdgeInsets.only(right: 15.0),
               child: GestureDetector(
                 onTap: () async {
-                  // if (Platform.isIOS ||
-                  //     Platform.isAndroid ||
-                  //     Platform.isMacOS) {
-                  //   bool status = await Permission.storage.isGranted;
-                  //
-                  //   if (!status) await Permission.storage.request();
-                  // }
-                  // // final List<int> codeUnits =
-                  // //     _controller.document.toPlainText().codeUnits;
-                  // // final Uint8List bytes = Uint8List.fromList(codeUnits);
-                  // // String path = await FileSaver.instance
-                  // //     .saveAs('your_ocr', bytes, 'docx', MimeType.OTHER);
-                  // // print(_controller.document.toDelta().toString());
-                  // // print(_controller.document.toPlainText());
-                  // print(jsonEncode(_controller.document.toDelta().toJson()));
-                  // // // print(bytes);
-                  // // print('Tapped');
-                  // var encoded = base64.encode(utf8.encode(_controller.document
-                  //     .toDelta()
-                  //     .toString())); // dXNlcm5hbWU6cGFzc3dvcmQ=
-                  // String decoded = utf8.decode(base64.decode(encoded));
-                  // print(encoded);
-                  // print(decoded);
                   var json =
                       jsonEncode(_controller.document.toDelta().toJson());
                   print(json);

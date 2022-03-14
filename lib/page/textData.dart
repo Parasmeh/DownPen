@@ -56,7 +56,7 @@ class _SavedDataState extends State<SavedData> {
                   child: ListTile(
                     leading: Icon(Icons.document_scanner),
                     title: Text(
-                      'Saved Document $index',
+                      'Saved Document ${index + 1}',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w600,

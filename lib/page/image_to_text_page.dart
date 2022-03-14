@@ -1,10 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_cropper_example/utils.dart';
-import 'package:image_cropper_example/widget/floating_button.dart';
 import 'package:image_cropper_example/page/text_editor.dart';
 
 class ImageTotext extends StatefulWidget {
@@ -31,6 +29,7 @@ class _ImageTotextState extends State<ImageTotext> {
           padding: const EdgeInsets.all(30.0),
           child: Text(
             text2,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
@@ -42,7 +41,6 @@ class _ImageTotextState extends State<ImageTotext> {
           onPressed: onClickedButton,
           heroTag: null,
         ),
-        // FloatingButtonWidget(onClicked: onClickedButton),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       );
 
@@ -71,14 +69,9 @@ class _ImageTotextState extends State<ImageTotext> {
       }
     }
 
-    // log(text);
-    // String textForPassing = text2.toString();
-    // Navigator.pushNamed(context, TextEditor.id, arguments: text2.trim());
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TextEditor(text: text)));
     textDetector.close();
-
-    // setState(() {});
   }
 
   static Future<File> cropCustomImage(File imageFile) async =>
