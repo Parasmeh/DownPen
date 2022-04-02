@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 // ignore: must_be_immutable
 class TextEditor extends StatefulWidget {
@@ -17,6 +18,7 @@ class TextEditor extends StatefulWidget {
 
 class _TextWidgetState extends State<TextEditor> {
   QuillController _controller = QuillController.basic();
+  final FlutterTts _flutterTts = FlutterTts();
   var savedList = [];
   void getSavedData(String convertedTextJson) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -51,6 +53,12 @@ class _TextWidgetState extends State<TextEditor> {
     }
   }
 
+  Future speak() async {
+    await _flutterTts.setLanguage("en-IN");
+    await _flutterTts.setPitch(1.0);
+    await _flutterTts.speak(widget.text);
+  }
+
   //
   @override
   void initState() {
@@ -64,6 +72,22 @@ class _TextWidgetState extends State<TextEditor> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: Container(
+          height: 70.0,
+          width: 70.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              backgroundColor: Colors.deepPurple,
+              child: Icon(
+                Icons.hearing,
+                size: 30.0,
+              ),
+              onPressed: speak,
+              heroTag: null,
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text.rich(
