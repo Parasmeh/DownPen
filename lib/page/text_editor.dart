@@ -2,36 +2,45 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:image_cropper_example/constants.dart';
+import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
 
 // ignore: must_be_immutable
 class TextEditor extends StatefulWidget {
   static String id = '/text_editor';
 
   String text;
-  int index;
+  String name;
   bool isSaved;
-  TextEditor({@required this.text, this.index, this.isSaved = false});
+  TextEditor({@required this.text, this.name, this.isSaved = false});
   @override
   _TextWidgetState createState() => _TextWidgetState();
 }
 
 class _TextWidgetState extends State<TextEditor> {
   QuillController _controller = QuillController.basic();
-  final FlutterTts _flutterTts = FlutterTts();
-  var savedList = [];
-  void getSavedData(String convertedTextJson) async {
+  String fileName;
+  SaveExceptions isNotSaved = SaveExceptions.YOU_CAN_SAVE;
+  var savedList = {};
+  Future<SaveExceptions> getSavedData(
+      String name, String convertedTextJson) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    savedList.add(convertedTextJson);
+    for (String key in savedList.keys.toList()) {
+      if (key == name) {
+        return SaveExceptions.FILE_ALREADY_EXISTS;
+      }
+    }
+    savedList[name] = convertedTextJson;
     await prefs.setString('saved_data', json.encode(savedList));
     print(savedList);
+    return SaveExceptions.YOU_CAN_SAVE;
   }
 
   void getSaved() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString('saved_data') ?? '';
     if (data != '' && data != null) {
-      savedList = json.decode(data).toList();
+      savedList = json.decode(data);
     } else {
       print("null returned");
     }
@@ -48,15 +57,9 @@ class _TextWidgetState extends State<TextEditor> {
           selection: TextSelection.collapsed(offset: 0));
     } else {
       _controller = QuillController(
-          document: Document.fromJson(jsonDecode(savedList[widget.index])),
+          document: Document.fromJson(jsonDecode(savedList[widget.name])),
           selection: TextSelection.collapsed(offset: 0));
     }
-  }
-
-  Future speak() async {
-    await _flutterTts.setLanguage("en-IN");
-    await _flutterTts.setPitch(1.0);
-    await _flutterTts.speak(widget.text);
   }
 
   //
@@ -72,22 +75,6 @@ class _TextWidgetState extends State<TextEditor> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: Container(
-          height: 70.0,
-          width: 70.0,
-          child: FittedBox(
-            child: FloatingActionButton(
-              backgroundColor: Colors.deepPurple,
-              child: Icon(
-                Icons.hearing,
-                size: 30.0,
-              ),
-              onPressed: speak,
-              heroTag: null,
-            ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text.rich(
@@ -115,14 +102,86 @@ class _TextWidgetState extends State<TextEditor> {
               padding: const EdgeInsets.only(right: 15.0),
               child: GestureDetector(
                 onTap: () async {
-                  var json =
-                      jsonEncode(_controller.document.toDelta().toJson());
-                  print(json);
-                  setState(() {
-                    getSavedData(json);
-                  });
-                  print("Document Saved\n");
-                  Navigator.pop(context);
+                  await showModalBottomSheet(
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30.0, horizontal: 30.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Add Your file Name',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          TextField(
+                            onChanged: (inputName) {
+                              setState(() {
+                                fileName = inputName;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1.0,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1.0,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 40.0),
+                          Container(
+                            color: Colors.blueAccent,
+                            child: TextButton(
+                              child: Text(
+                                'Save',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                              onPressed: () async {
+                                var json = jsonEncode(
+                                    _controller.document.toDelta().toJson());
+                                print(json);
+                                var status = await getSavedData(fileName, json);
+                                setState(() {
+                                  print(status);
+                                  isNotSaved = status;
+                                });
+                                if (isNotSaved ==
+                                    SaveExceptions.FILE_ALREADY_EXISTS) {
+                                  print("Document Not Saved\n");
+                                  WarningAlertBox(
+                                      context: context,
+                                      title: 'FILE ALREADY EXISTS',
+                                      messageText:
+                                          'File with entered name Already exists..... Please try another name ',
+                                      buttonColor: Colors.red,
+                                      titleTextColor: Colors.red,
+                                      buttonTextColor: Colors.black,
+                                      messageTextColor: Colors.black);
+                                } else {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 },
                 child: Icon(
                   Icons.arrow_right_alt,

@@ -17,6 +17,7 @@ class ImageTotext extends StatefulWidget {
 }
 
 class _ImageTotextState extends State<ImageTotext> {
+  bool _converting = false;
   List<File> imageFiles = [];
   final textDetector = GoogleMlKit.vision.textDetector();
   var text2 =
@@ -51,6 +52,9 @@ class _ImageTotextState extends State<ImageTotext> {
     );
 
     if (file == null) return;
+    setState(() {
+      _converting = true;
+    });
     final inputImage = InputImage.fromFile(file);
     final RecognisedText recognisedText =
         await textDetector.processImage(inputImage);
@@ -72,6 +76,9 @@ class _ImageTotextState extends State<ImageTotext> {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TextEditor(text: text)));
     textDetector.close();
+    setState(() {
+      _converting = true;
+    });
   }
 
   static Future<File> cropCustomImage(File imageFile) async =>

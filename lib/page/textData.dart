@@ -8,14 +8,24 @@ class SavedData extends StatefulWidget {
   _SavedDataState createState() => _SavedDataState();
 }
 
-var savedList = [];
+var savedList = {};
 
 class _SavedDataState extends State<SavedData> {
+  List savedList1 = [];
+  List keys = [];
+
+  void getSavedMap() {}
+
   void getSavedData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString('saved_data');
     if (data != '' && data != null) {
-      savedList = json.decode(data).toList();
+      savedList = json.decode(data);
+      keys = savedList.keys.toList();
+      for (String key in keys) {
+        savedList1.add(savedList[key]);
+      }
+      print(savedList1);
     } else {
       print("null returned");
     }
@@ -45,7 +55,7 @@ class _SavedDataState extends State<SavedData> {
                       MaterialPageRoute(
                           builder: (context) => TextEditor(
                                 text: 'text2',
-                                index: index,
+                                name: keys[index],
                                 isSaved: true,
                               )));
                 },
@@ -56,7 +66,7 @@ class _SavedDataState extends State<SavedData> {
                   child: ListTile(
                     leading: Icon(Icons.document_scanner),
                     title: Text(
-                      'Saved Document ${index + 1}',
+                      keys[index],
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w600,
