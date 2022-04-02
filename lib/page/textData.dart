@@ -18,7 +18,7 @@ class _SavedDataState extends State<SavedData> {
 
   void getSavedData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String data = prefs.getString('saved_data');
+    String? data = prefs.getString('saved_data');
     if (data != '' && data != null) {
       savedList = json.decode(data);
       keys = savedList.keys.toList();

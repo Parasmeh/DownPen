@@ -12,14 +12,14 @@ class TextEditor extends StatefulWidget {
   String text;
   String name;
   bool isSaved;
-  TextEditor({@required this.text, this.name, this.isSaved = false});
+  TextEditor({required this.text, this.name = '', this.isSaved = false});
   @override
   _TextWidgetState createState() => _TextWidgetState();
 }
 
 class _TextWidgetState extends State<TextEditor> {
   QuillController _controller = QuillController.basic();
-  String fileName;
+  late String fileName;
   SaveExceptions isNotSaved = SaveExceptions.YOU_CAN_SAVE;
   var savedList = {};
   Future<SaveExceptions> getSavedData(

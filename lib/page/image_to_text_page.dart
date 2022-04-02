@@ -6,10 +6,11 @@ import 'package:image_cropper_example/utils.dart';
 import 'package:image_cropper_example/page/text_editor.dart';
 
 class ImageTotext extends StatefulWidget {
+  static String id = '/image_to_text';
   final bool isGallery;
 
   const ImageTotext({
-    @required this.isGallery,
+    required this.isGallery,
   });
 
   @override
@@ -81,7 +82,7 @@ class _ImageTotextState extends State<ImageTotext> {
     });
   }
 
-  static Future<File> cropCustomImage(File imageFile) async =>
+  static Future<File?> cropCustomImage(File imageFile) async =>
       await ImageCropper().cropImage(
         aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),
         sourcePath: imageFile.path,

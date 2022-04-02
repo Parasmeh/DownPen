@@ -1,4 +1,4 @@
-enum SaveExceptions { FILE_ALREADY_EXISTS, YOU_CAN_SAVE }
+// ignore_for_file: constant_identifier_names, camel_case_types
 
 enum Auth_Exceptions {
   EMAIL_ALREADY_EXISTS,
@@ -10,4 +10,10 @@ enum Auth_Exceptions {
   ACCOUNT_NOT_FOUND,
   INVALID_PASSWORD,
   RESET_LINK_SENT,
+}
+
+enum Question_Type {
+  SINGLE_CORRECT_ANSWER,
+  MULTIPLE_CORRECT_ANSWER,
+  FILL_IN_THE_BLANKS
 }

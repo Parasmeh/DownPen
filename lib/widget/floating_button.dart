@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 class FloatingButtonWidget extends StatelessWidget {
   final VoidCallback onClicked;
 
-  const FloatingButtonWidget({
-    Key key,
-    @required this.onClicked,
-  }) : super(key: key);
+  FloatingButtonWidget({
+    required this.onClicked,
+  });
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
