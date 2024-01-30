@@ -2,7 +2,7 @@ name: image_cropper_example
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -22,6 +22,8 @@ dependencies:
   google_sign_in: ^5.2.4
   connectivity_plus: ^2.2.1
   flutter_tts: ^3.3.3
+  pdf: ^3.7.3
+
 
 
 

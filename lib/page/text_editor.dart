@@ -4,6 +4,9 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_cropper_example/constants.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 // ignore: must_be_immutable
 class TextEditor extends StatefulWidget {
@@ -71,10 +74,32 @@ class _TextWidgetState extends State<TextEditor> {
     getSaved();
   }
 
+  final FlutterTts flutterTts = FlutterTts();
+  Future<void> _speak() async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setPitch(1);
+    await flutterTts.speak(_controller.document.toPlainText());
+    print(await flutterTts.getVoices);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: Container(
+          width: 75.0,
+          height: 75.0,
+          child: FloatingActionButton(
+            backgroundColor: Colors.deepPurple,
+            child: Icon(
+              Icons.hearing,
+              size: 40.0,
+              color: Colors.white,
+            ),
+            onPressed: _speak,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text.rich(
@@ -221,7 +246,9 @@ class _TextWidgetState extends State<TextEditor> {
                       left: 20.0,
                     ),
                     child: QuillEditor.basic(
-                        controller: _controller, readOnly: false),
+                      controller: _controller,
+                      readOnly: false,
+                    ),
                   ),
                 ),
               ),
